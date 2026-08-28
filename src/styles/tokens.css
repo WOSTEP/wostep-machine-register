@@ -1,0 +1,51 @@
+/* WOSTEP brand tokens — see design_handoff_machine_register/README.md "Design tokens" */
+:root {
+  /* Colour */
+  --red: #f93139;
+  --red-dark: #c9151d;
+  --green: #6ec847;
+  --yellow: #fcee21;
+  --yellow-tint: #fdf8cf;
+  --red-tint: #fde4e5;
+  --green-tint: #e8f6e0;
+  --black: #000000;
+  --ink-dark: #1a1a1a;
+  --panel-dark: #2b2b2b;
+  --grey-text: #6d6e70;
+  --grey-label: #98999b;
+  --grey-faint: #b3b4b6;
+  --sheet: #efefed;
+  --sheet-warm: #f7f7f6;
+  --white: #ffffff;
+  --border: rgba(0, 0, 0, 0.1);
+  --border-input: #d5d5d3;
+  --border-input-alt: rgba(0, 0, 0, 0.14);
+
+  /* Type */
+  --font-display: var(--font-jost), Helvetica, Arial, sans-serif;
+  --font-body: Helvetica, Arial, sans-serif;
+
+  /* Radius */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 9px;
+  --radius-lg: 10px;
+  --radius-xl: 12px;
+  --radius-pill: 999px;
+
+  /* Shadow */
+  --shadow-toast: 0 8px 28px rgba(0, 0, 0, 0.3);
+
+  /* Status */
+  --status-ok-bg: var(--green);
+  --status-ok-fg: #000000;
+  --status-due-bg: var(--yellow);
+  --status-due-fg: #000000;
+  --status-overdue-bg: var(--red);
+  --status-overdue-fg: #ffffff;
+  --status-fault-bg: var(--red);
+  --status-fault-fg: #ffffff;
+
+  /* Viewport */
+  --screen-max-width: 402px;
+}

@@ -1,69 +1,116 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
 
-export default function Home() {
+import Image from "next/image";
+import Link from "next/link";
+import { ScreenShell } from "@/components/ScreenShell";
+import { useLang } from "@/lib/i18n/LangProvider";
+
+export default function WelcomePage() {
+  const { t, lang, toggleLang } = useLang();
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>
-            To get started, edit the{" "}
-            <code className={styles.code}>page.tsx</code> file.
-          </h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <ScreenShell background="#ffffff">
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 16,
+          padding: "70px 28px 24px",
+        }}
+      >
+        <Image src="/logo-wostep.png" alt="Fondation WOSTEP" width={126} height={126} priority />
+        <div style={{ width: 34, height: 2, background: "var(--red)" }} />
+        <div
+          style={{
+            textAlign: "center",
+            font: "500 24px/1.2 var(--font-display)",
+            letterSpacing: "-.01em",
+            color: "var(--black)",
+          }}
+        >
+          {t.appName}
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div
+          style={{
+            maxWidth: 270,
+            textAlign: "center",
+            font: "400 13px/1.5 var(--font-body)",
+            color: "var(--grey-text)",
+          }}
+        >
+          {t.welcomeSub}
         </div>
-      </main>
-    </div>
+      </div>
+
+      <div
+        style={{
+          flex: "none",
+          padding: "0 24px calc(40px + env(safe-area-inset-bottom))",
+          display: "flex",
+          flexDirection: "column",
+          gap: 11,
+        }}
+      >
+        <Link
+          href="/scan"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 5,
+            padding: "18px 20px",
+            borderRadius: 11,
+            background: "var(--black)",
+            textAlign: "left",
+          }}
+        >
+          <span style={{ font: "600 16px/1 var(--font-display)", color: "#ffffff" }}>
+            {t.visitorBtn}
+          </span>
+          <span style={{ font: "400 11.5px/1.35 var(--font-body)", color: "rgba(255,255,255,.6)" }}>
+            {t.visitorSub}
+          </span>
+        </Link>
+        <Link
+          href="/signin"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 5,
+            padding: "18px 20px",
+            border: "1px solid rgba(0,0,0,.18)",
+            borderRadius: 11,
+            background: "#ffffff",
+            textAlign: "left",
+          }}
+        >
+          <span style={{ font: "600 16px/1 var(--font-display)", color: "var(--black)" }}>
+            {t.staffBtn}
+          </span>
+          <span style={{ font: "400 11.5px/1.35 var(--font-body)", color: "var(--grey-label)" }}>
+            {t.staffSub}
+          </span>
+        </Link>
+        <div style={{ display: "flex", justifyContent: "center", paddingTop: 6 }}>
+          <button
+            onClick={toggleLang}
+            style={{
+              padding: "7px 13px",
+              border: "1px solid rgba(0,0,0,.14)",
+              borderRadius: 999,
+              background: "#ffffff",
+              font: "500 11px/1 var(--font-body)",
+              letterSpacing: ".06em",
+              color: "var(--grey-text)",
+              cursor: "pointer",
+            }}
+          >
+            {lang}
+          </button>
+        </div>
+      </div>
+    </ScreenShell>
   );
 }
