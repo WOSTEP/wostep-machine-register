@@ -37,7 +37,7 @@ export function MachineLandingClient({ machine }: { machine: MachineSummary }) {
               color: "var(--grey-label)",
             }}
           >
-            {t.appName}
+            {t.signinTitle}
           </div>
         </div>
 
