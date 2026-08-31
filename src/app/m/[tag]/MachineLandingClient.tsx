@@ -76,6 +76,7 @@ export function MachineLandingClient({ machine }: { machine: MachineSummary }) {
             </div>
             <div style={{ marginTop: 5, font: "400 11px/1 var(--font-body)", color: "var(--grey-text)" }}>
               {roomName}
+              {machine.year && ` · ${t.fYear} ${machine.year}`}
             </div>
           </div>
         </div>
