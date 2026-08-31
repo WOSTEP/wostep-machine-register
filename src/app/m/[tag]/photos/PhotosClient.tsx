@@ -64,7 +64,7 @@ export function PhotosClient({
               border: "1px solid var(--border)",
             }}
           >
-            <Image src="/logo-wostep.png" alt="" width={34} height={34} />
+            <Image src="/logo-icon-watermark.png" alt="" width={34} height={34} />
             <div style={{ minWidth: 0 }}>
               <div style={{ font: "500 14px/1.2 var(--font-display)", color: "var(--black)" }}>
                 {machine.name}

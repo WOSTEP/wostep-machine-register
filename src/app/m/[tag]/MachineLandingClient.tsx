@@ -28,7 +28,7 @@ export function MachineLandingClient({ machine }: { machine: MachineSummary }) {
         }}
       >
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
-          <Image src="/logo-wostep.png" alt="Fondation WOSTEP" width={88} height={88} />
+          <Image src="/logo-wostep.png" alt="Fondation WOSTEP" width={168} height={40} />
           <div
             style={{
               font: "500 10px/1 var(--font-display)",

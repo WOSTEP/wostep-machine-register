@@ -21,7 +21,7 @@ export default function WelcomePage() {
           padding: "70px 28px 24px",
         }}
       >
-        <Image src="/logo-wostep.png" alt="Fondation WOSTEP" width={126} height={126} priority />
+        <Image src="/logo-wostep.png" alt="Fondation WOSTEP" width={220} height={53} priority />
         <div style={{ width: 34, height: 2, background: "var(--red)" }} />
         <div
           style={{

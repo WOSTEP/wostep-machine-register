@@ -44,7 +44,7 @@ export default function SignInPage() {
         }}
       >
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
-          <Image src="/logo-wostep.png" alt="Fondation WOSTEP" width={132} height={132} />
+          <Image src="/logo-wostep.png" alt="Fondation WOSTEP" width={230} height={55} />
           <div style={{ width: 34, height: 2, background: "var(--red)" }} />
         </div>
 
