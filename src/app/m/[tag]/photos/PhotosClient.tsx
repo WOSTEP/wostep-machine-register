@@ -71,6 +71,7 @@ export function PhotosClient({
               </div>
               <div style={{ marginTop: 3, font: "400 11px/1 var(--font-body)", color: "var(--grey-label)" }}>
                 {machine.asset_tag} · {roomName}
+                {machine.year && ` · ${t.fYear} ${machine.year}`}
               </div>
             </div>
           </div>
