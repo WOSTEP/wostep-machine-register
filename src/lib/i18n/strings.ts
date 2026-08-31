@@ -137,7 +137,7 @@ export const STR = {
     addBtn: "Add",
     cancel: "Cancel",
     noExtraPhotos: "Add a photo for each drawer or fixture on this machine.",
-    appName: "WOSTEP Machine Register",
+    appName: "Machine Register",
     staffSignin: "Sign in (staff)",
     landingNote:
       "Opened from the QR tag on the machine. Sign-in is only needed by instructors and the director.",
@@ -376,7 +376,7 @@ export const STR = {
     addBtn: "Ajouter",
     cancel: "Annuler",
     noExtraPhotos: "Ajoutez une photo pour chaque tiroir ou accessoire de cette machine.",
-    appName: "WOSTEP Machine Register",
+    appName: "Registre des machines",
     staffSignin: "Connexion (personnel)",
     landingNote:
       "Ouvert depuis l’étiquette QR de la machine. La connexion ne concerne que les instructeurs et le directeur.",
