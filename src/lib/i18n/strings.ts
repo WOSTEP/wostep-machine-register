@@ -244,6 +244,10 @@ export const STR = {
     reframeTitle: "Adjust framing",
     reframeHint: "Tap or drag to set the point that stays in view when this photo is cropped.",
     saveFraming: "Save framing",
+    visitorAccessTitle: "Visitor access",
+    visitorAccessSub: "Enter the shared login you were given to continue.",
+    username: "Username",
+    invalidGuestCredentials: "Incorrect username or password.",
   },
   FR: {
     back: "Retour",
@@ -480,6 +484,10 @@ export const STR = {
     reframeTitle: "Ajuster le cadrage",
     reframeHint: "Touchez ou glissez pour définir le point qui reste visible lors du recadrage de cette photo.",
     saveFraming: "Enregistrer le cadrage",
+    visitorAccessTitle: "Accès visiteur",
+    visitorAccessSub: "Saisissez les identifiants partagés qui vous ont été communiqués pour continuer.",
+    username: "Nom d’utilisateur",
+    invalidGuestCredentials: "Nom d’utilisateur ou mot de passe incorrect.",
   },
 } as const;
 
