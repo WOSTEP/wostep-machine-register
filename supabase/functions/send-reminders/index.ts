@@ -4,14 +4,16 @@
 // app when a service is logged, see NOTE below), and overdue (lead-time
 // days after the due date, to the director only).
 //
-// NOT WIRED UP YET. To activate:
-//   1. `supabase functions deploy send-reminders`
-//   2. Set secrets: `supabase secrets set RESEND_API_KEY=... SUPABASE_SERVICE_ROLE_KEY=...`
-//   3. Schedule it with pg_cron (see supabase/README.md in this folder for
-//      the exact SQL, which needs the deployed function's URL + anon key).
+// Deployed and scheduled daily via pg_cron (see supabase/migrations/
+// 0002_schedule_reminders.sql and supabase/README.md).
 //
 // This function uses the SERVICE ROLE key so it bypasses RLS entirely —
 // never expose that key to the client app.
+//
+// Test mode: call with ?test=1 (optionally &to=someone@wostep.ch) to send a
+// single harmless test email through the real Resend + DNS pipeline,
+// without reading/writing any machine data or the sent_emails dedup log.
+// e.g. curl "https://<project>.supabase.co/functions/v1/send-reminders?test=1"
 
 import { createClient } from "npm:@supabase/supabase-js@2";
 
@@ -30,7 +32,20 @@ type Machine = {
   room_name_en: string;
 };
 
-Deno.serve(async () => {
+Deno.serve(async (req) => {
+  const url = new URL(req.url);
+
+  if (url.searchParams.has("test")) {
+    const to = url.searchParams.get("to") || "formation@wostep.ch";
+    const result = await sendEmail({
+      to: [to],
+      from: "formation@wostep.ch",
+      subject: "WOSTEP Machine Register — test email",
+      text: "This is a one-off test send to confirm Resend + DNS are wired up correctly. No machine data was touched.",
+    });
+    return Response.json({ ok: result.ok, to, resendStatus: result.status, resendBody: result.body });
+  }
+
   const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
 
   const { data: settings } = await supabase.from("settings").select("*").eq("id", 1).single();
@@ -136,12 +151,17 @@ async function recordSent(
     .insert({ machine_id: machineId, rule, fired_for_date: firedForDate });
 }
 
-async function sendEmail(params: { to: string[]; from: string; subject: string; text: string }) {
+async function sendEmail(params: {
+  to: string[];
+  from: string;
+  subject: string;
+  text: string;
+}): Promise<{ ok: boolean; status: number; body: string }> {
   if (!RESEND_API_KEY) {
     console.log("RESEND_API_KEY not set — skipping actual send:", params.subject);
-    return;
+    return { ok: false, status: 0, body: "RESEND_API_KEY not set" };
   }
-  await fetch("https://api.resend.com/emails", {
+  const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${RESEND_API_KEY}`,
@@ -149,4 +169,6 @@ async function sendEmail(params: { to: string[]; from: string; subject: string; 
     },
     body: JSON.stringify(params),
   });
+  const body = await res.text();
+  return { ok: res.ok, status: res.status, body };
 }
