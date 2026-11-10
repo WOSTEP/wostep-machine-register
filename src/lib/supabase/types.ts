@@ -8,6 +8,7 @@ export type WorkType =
   | "repair"
   | "calibration"
   | "cleaning"
+  | "accessories"
   | "carried_forward";
 
 export type FaultSeverity = "blocking" | "partial" | "minor";

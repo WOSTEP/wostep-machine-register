@@ -19,7 +19,7 @@ export async function listServices(db: DB, machineId: string): Promise<Service[]
  */
 export async function logService(
   db: DB,
-  input: ServiceInsert & { nextDue: string }
+  input: ServiceInsert & { nextDue: string | null }
 ): Promise<Service> {
   const { nextDue, ...serviceInput } = input;
   const { data, error } = await db
@@ -28,6 +28,7 @@ export async function logService(
     .select()
     .single();
   if (error) throw error;
+  if (!nextDue) return data;
 
   const { error: updateError } = await db
     .from("machines")

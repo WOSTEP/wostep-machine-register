@@ -7,7 +7,13 @@ export const WORK_TYPES: WorkType[] = [
   "repair",
   "calibration",
   "cleaning",
+  "accessories",
 ];
+
+/** Work types that are purchases, not maintenance — they don't reset the service schedule. */
+export function resetsSchedule(type: WorkType): boolean {
+  return type !== "accessories";
+}
 
 export function workTypeLabel(type: WorkType, t: Strings): string {
   return {
@@ -16,6 +22,7 @@ export function workTypeLabel(type: WorkType, t: Strings): string {
     repair: t.workRepair,
     calibration: t.workCalibration,
     cleaning: t.workCleaning,
+    accessories: t.workAccessories,
     carried_forward: t.workCarriedForward,
   }[type];
 }

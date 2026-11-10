@@ -8,7 +8,7 @@ import { useToast } from "@/lib/toast";
 import { createClient } from "@/lib/supabase/client";
 import { logService } from "@/lib/data/services";
 import { ATTACHMENT_ACCEPT, uploadServiceAttachment } from "@/lib/data/attachments";
-import { WORK_TYPES, workTypeLabel } from "@/lib/labels";
+import { WORK_TYPES, resetsSchedule, workTypeLabel } from "@/lib/labels";
 import { addMonths, formatDate, parseDisplayDate, toISODate, addDays } from "@/lib/status";
 import type { MachineSummary } from "@/lib/data/types";
 import type { WorkType } from "@/lib/supabase/types";
@@ -56,7 +56,8 @@ export function LogServiceClient({
   async function handleSave() {
     const serviceDate = parseDisplayDate(date);
     const nextDueDate = parseDisplayDate(effectiveNext ?? "");
-    if (!serviceDate || !nextDueDate) return;
+    const isService = resetsSchedule(workType);
+    if (!serviceDate || (isService && !nextDueDate)) return;
     setBusy(true);
     try {
       let attachment_path: string | null = null;
@@ -81,9 +82,9 @@ export function LogServiceClient({
         signed_off_by_name: personId ? null : signedInEmail,
         invoice_number: invNo || null,
         supplier: supplier || null,
-        amount_chf: amount ? Number(amount) : null,
+        amount_chf: parseAmount(amount),
         attachment_path,
-        nextDue: toISODate(nextDueDate),
+        nextDue: isService && nextDueDate ? toISODate(nextDueDate) : null,
       });
 
       showToast(t.savedTitle, t.savedBody);
@@ -184,6 +185,7 @@ export function LogServiceClient({
           <div style={{ font: "400 11px/1.45 var(--font-body)", color: "var(--grey-label)" }}>{t.invoiceOptional}</div>
         </div>
 
+        {resetsSchedule(workType) && (
         <div style={{ padding: "13px 14px", borderRadius: 10, background: "var(--sheet)", border: "1px dashed rgba(249,49,57,.5)" }}>
           <div style={{ font: "500 10px/1 var(--font-body)", letterSpacing: ".1em", textTransform: "uppercase", color: "var(--red)" }}>
             {t.nextDueAuto}
@@ -227,6 +229,7 @@ export function LogServiceClient({
             {t.alarmWillFire} {alarmDate}
           </div>
         </div>
+        )}
 
         <button
           onClick={handleSave}
@@ -305,3 +308,9 @@ const smallFieldStyle: React.CSSProperties = {
   outline: "none",
   minWidth: 0,
 };
+
+/** "1'250.50", "1250,50" → 1250.5; blank or unreadable → null */
+function parseAmount(v: string): number | null {
+  const n = Number(v.replace(/['’\s]/g, "").replace(",", "."));
+  return v.trim() === "" || !Number.isFinite(n) ? null : n;
+}

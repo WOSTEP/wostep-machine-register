@@ -19,6 +19,8 @@ type Draft = {
   date: string;
   notes: string;
   invoice_number: string;
+  amount: string;
+  supplier: string;
   file: File | null;
 };
 
@@ -43,6 +45,8 @@ export function EditHistoryClient({
           date: formatDate(new Date(s.date)),
           notes: s.notes ?? "",
           invoice_number: s.invoice_number ?? "",
+          amount: s.amount_chf != null ? String(s.amount_chf) : "",
+          supplier: s.supplier ?? "",
           file: null,
         },
       ])
@@ -69,6 +73,8 @@ export function EditHistoryClient({
             date: date ? toISODate(date) : s.date,
             notes: d.notes || null,
             invoice_number: d.invoice_number || null,
+            amount_chf: parseAmount(d.amount),
+            supplier: d.supplier || null,
             attachment_path,
           });
         })
@@ -129,6 +135,27 @@ export function EditHistoryClient({
                     style={smallField}
                   />
                 </label>
+                <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1.2fr)", gap: 9 }}>
+                  <label style={{ display: "flex", flexDirection: "column", gap: 5, minWidth: 0 }}>
+                    <span style={smallLabel}>{t.amount}</span>
+                    <input
+                      value={d.amount}
+                      inputMode="decimal"
+                      onChange={(e) => patch(s.id, { amount: e.target.value })}
+                      placeholder={t.amountHint}
+                      style={smallField}
+                    />
+                  </label>
+                  <label style={{ display: "flex", flexDirection: "column", gap: 5, minWidth: 0 }}>
+                    <span style={smallLabel}>{t.supplier}</span>
+                    <input
+                      value={d.supplier}
+                      onChange={(e) => patch(s.id, { supplier: e.target.value })}
+                      placeholder={t.supplierHint}
+                      style={smallField}
+                    />
+                  </label>
+                </div>
                 {s.attachment_path && !d.file && (
                   <InvoiceAttachment path={s.attachment_path} fileBase={`${machine.asset_tag}_${s.date}_invoice`} />
                 )}
@@ -189,3 +216,16 @@ const smallField: React.CSSProperties = {
   outline: "none",
   minWidth: 0,
 };
+
+const smallLabel: React.CSSProperties = {
+  font: "400 9.5px/1 var(--font-body)",
+  letterSpacing: ".1em",
+  textTransform: "uppercase",
+  color: "var(--grey-label)",
+};
+
+/** "1'250.50", "1250,50" → 1250.5; blank or unreadable → null */
+function parseAmount(v: string): number | null {
+  const n = Number(v.replace(/['’\s]/g, "").replace(",", "."));
+  return v.trim() === "" || !Number.isFinite(n) ? null : n;
+}
