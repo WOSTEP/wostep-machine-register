@@ -69,6 +69,8 @@ export function MachineRecordClient({
     router.refresh();
   }
 
+  const totalCost = services.reduce((sum, h) => sum + (h.amount_chf != null ? Number(h.amount_chf) : 0), 0);
+
   return (
     <>
       <ScreenChrome title={machine.name} subtitle={machine.asset_tag} backHref="/app/register" backLabel={t.tList} />
@@ -291,6 +293,11 @@ export function MachineRecordClient({
           <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between" }}>
             <SectionHeading>{t.history}</SectionHeading>
             <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
+              {totalCost > 0 && (
+                <div style={{ font: "600 12px/1 var(--font-display)", color: "var(--black)" }}>
+                  {t.totalCost} {formatCHF(totalCost)}
+                </div>
+              )}
               <div style={{ font: "400 11px/1 var(--font-body)", color: "var(--grey-label)" }}>{services.length}</div>
               {services.length > 0 && (
                 <Link
@@ -337,7 +344,12 @@ export function MachineRecordClient({
                   <div style={{ marginTop: 5, font: "400 11px/1 var(--font-body)", color: "var(--grey-faint)" }}>
                     {h.signed_off_by_name ?? "—"}
                   </div>
-                  {h.invoice_number && (
+                  {h.amount_chf != null && (
+                    <div style={{ marginTop: 6, font: "600 15px/1.2 var(--font-display)", color: "var(--black)" }}>
+                      {formatCHF(h.amount_chf)}
+                    </div>
+                  )}
+                  {(h.invoice_number || h.supplier) && (
                     <div
                       style={{
                         marginTop: 8,
@@ -351,7 +363,7 @@ export function MachineRecordClient({
                       }}
                     >
                       <span style={{ font: "400 10.5px/1.3 var(--font-body)", color: "#4a4b4d" }}>
-                        {[h.invoice_number, h.supplier, h.amount_chf ? `CHF ${h.amount_chf}` : null]
+                        {[h.invoice_number, h.supplier]
                           .filter(Boolean)
                           .join(" · ")}
                       </span>
@@ -385,4 +397,9 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
       {children}
     </div>
   );
+}
+
+const chfFormat = new Intl.NumberFormat("de-CH", { style: "currency", currency: "CHF" });
+function formatCHF(n: number | string) {
+  return chfFormat.format(Number(n));
 }
