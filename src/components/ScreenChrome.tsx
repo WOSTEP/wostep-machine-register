@@ -8,11 +8,13 @@ export function ScreenChrome({
   subtitle,
   backHref,
   backLabel,
+  action,
 }: {
   title: string;
   subtitle?: string;
   backHref?: string;
   backLabel?: string;
+  action?: React.ReactNode;
 }) {
   const { lang, toggleLang } = useLang();
 
@@ -68,23 +70,24 @@ export function ScreenChrome({
             </div>
           )}
         </div>
-        <button
-          onClick={toggleLang}
-          style={{
-            flex: "none",
-            marginTop: 2,
-            padding: "6px 10px",
-            border: "1px solid rgba(0,0,0,.16)",
-            borderRadius: 999,
-            background: "#fff",
-            font: "500 11px/1 var(--font-body)",
-            letterSpacing: ".06em",
-            color: "var(--black)",
-            cursor: "pointer",
-          }}
-        >
-          {lang}
-        </button>
+        <div style={{ flex: "none", marginTop: 2, display: "flex", alignItems: "center", gap: 8 }}>
+          {action}
+          <button
+            onClick={toggleLang}
+            style={{
+              padding: "6px 10px",
+              border: "1px solid rgba(0,0,0,.16)",
+              borderRadius: 999,
+              background: "#fff",
+              font: "500 11px/1 var(--font-body)",
+              letterSpacing: ".06em",
+              color: "var(--black)",
+              cursor: "pointer",
+            }}
+          >
+            {lang}
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ScreenChrome } from "@/components/ScreenChrome";
+import { ScanQrIcon } from "@/components/ScanQrIcon";
 import { useLang } from "@/lib/i18n/LangProvider";
 import { createClient } from "@/lib/supabase/client";
 import { photoPublicUrl } from "@/lib/data/photos";
@@ -79,7 +80,29 @@ export function RegisterClient({
 
   return (
     <>
-      <ScreenChrome title={t.tList} subtitle={`${machines.length} ${t.sList}`} />
+      <ScreenChrome
+        title={t.tList}
+        subtitle={`${machines.length} ${t.sList}`}
+        action={
+          <Link
+            href="/app/register/scan"
+            title={t.tScan}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 30,
+              height: 30,
+              border: "1px solid rgba(0,0,0,.16)",
+              borderRadius: 999,
+              background: "var(--black)",
+              color: "#fff",
+            }}
+          >
+            <ScanQrIcon size={15} />
+          </Link>
+        }
+      />
       <div style={{ padding: "16px 16px 24px", display: "flex", flexDirection: "column", gap: 16 }}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
           <StatCard
