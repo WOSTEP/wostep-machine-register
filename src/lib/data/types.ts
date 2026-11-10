@@ -11,3 +11,4 @@ export type Service = Database["public"]["Tables"]["services"]["Row"];
 export type Fault = Database["public"]["Tables"]["faults"]["Row"];
 export type Photo = Database["public"]["Tables"]["photos"]["Row"];
 export type Settings = Database["public"]["Tables"]["settings"]["Row"];
+export type GeneralCost = Database["public"]["Tables"]["general_costs"]["Row"];

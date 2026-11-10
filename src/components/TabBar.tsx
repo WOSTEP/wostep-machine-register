@@ -6,6 +6,7 @@ import { useLang } from "@/lib/i18n/LangProvider";
 const TABS = [
   { href: "/app/register", icon: "▦", key: "machines" as const },
   { href: "/app/alarms", icon: "◷", key: "alarms" as const },
+  { href: "/app/costs", icon: "₣", key: "costs" as const },
   { href: "/app/add", icon: "＋", key: "add" as const },
 ];
 
@@ -19,7 +20,7 @@ export function TabBar() {
       className="screen-tabbar"
       style={{
         display: "grid",
-        gridTemplateColumns: "repeat(3, 1fr)",
+        gridTemplateColumns: `repeat(${TABS.length}, 1fr)`,
         gap: 2,
         padding: "9px 8px calc(14px + env(safe-area-inset-bottom))",
         background: "var(--sheet)",
@@ -46,7 +47,7 @@ export function TabBar() {
           >
             <span style={{ font: "400 17px/1 var(--font-display)" }}>{tab.icon}</span>
             <span style={{ font: "500 10px/1 var(--font-display)" }}>
-              {tab.key === "machines" ? t.machines : tab.key === "alarms" ? t.alarms : t.add}
+              {t[tab.key]}
             </span>
           </button>
         );

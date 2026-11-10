@@ -12,6 +12,7 @@ import { useLang } from "@/lib/i18n/LangProvider";
 import { createClient } from "@/lib/supabase/client";
 import { photoPublicUrl } from "@/lib/data/photos";
 import { resolveFault } from "@/lib/data/faults";
+import { formatCHF } from "@/lib/data/costs";
 import {
   computeStatus,
   formatDate,
@@ -397,9 +398,4 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
       {children}
     </div>
   );
-}
-
-const chfFormat = new Intl.NumberFormat("de-CH", { style: "currency", currency: "CHF" });
-function formatCHF(n: number | string) {
-  return chfFormat.format(Number(n));
 }

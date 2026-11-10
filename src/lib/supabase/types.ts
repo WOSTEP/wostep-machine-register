@@ -151,6 +151,27 @@ export interface Database {
         Update: Partial<Database["public"]["Tables"]["settings"]["Row"]>;
         Relationships: [];
       };
+      general_costs: {
+        Row: {
+          id: string;
+          date: string;
+          description: string;
+          supplier: string | null;
+          invoice_number: string | null;
+          amount_chf: number;
+          attachment_path: string | null;
+          logged_by: string | null;
+          logged_by_name: string | null;
+          created_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["general_costs"]["Row"]> & {
+          date: string;
+          description: string;
+          amount_chf: number;
+        };
+        Update: Partial<Database["public"]["Tables"]["general_costs"]["Row"]>;
+        Relationships: [];
+      };
       sent_emails: {
         Row: {
           id: string;
