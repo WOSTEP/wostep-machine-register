@@ -1,5 +1,6 @@
 "use client";
 
+import { InvoiceAttachment } from "@/components/InvoiceAttachment";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -355,6 +356,12 @@ export function MachineRecordClient({
                           .join(" · ")}
                       </span>
                     </div>
+                  )}
+                  {h.attachment_path && (
+                    <InvoiceAttachment
+                      path={h.attachment_path}
+                      fileBase={`${machine.asset_tag}_${h.date}_${h.invoice_number || "invoice"}`.replace(/[^\w.-]+/g, "-")}
+                    />
                   )}
                 </div>
               </div>

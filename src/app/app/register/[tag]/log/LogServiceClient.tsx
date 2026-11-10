@@ -7,7 +7,7 @@ import { useLang } from "@/lib/i18n/LangProvider";
 import { useToast } from "@/lib/toast";
 import { createClient } from "@/lib/supabase/client";
 import { logService } from "@/lib/data/services";
-import { downscaleToWebp } from "@/lib/image";
+import { ATTACHMENT_ACCEPT, uploadServiceAttachment } from "@/lib/data/attachments";
 import { WORK_TYPES, workTypeLabel } from "@/lib/labels";
 import { addMonths, formatDate, parseDisplayDate, toISODate, addDays } from "@/lib/status";
 import type { MachineSummary } from "@/lib/data/types";
@@ -61,12 +61,13 @@ export function LogServiceClient({
     try {
       let attachment_path: string | null = null;
       if (invoiceFile) {
-        const blob = await downscaleToWebp(invoiceFile);
-        const path = `${machine.id}/${crypto.randomUUID()}.webp`;
-        const { error } = await supabase.storage
-          .from("service-attachments")
-          .upload(path, blob, { contentType: "image/webp" });
-        if (!error) attachment_path = path;
+        try {
+          attachment_path = await uploadServiceAttachment(supabase, machine.id, invoiceFile);
+        } catch (e) {
+          // Don't silently save the entry without its invoice
+          showToast(t.invoiceUploadFailed, e instanceof Error ? e.message : undefined);
+          return;
+        }
       }
 
       await logService(supabase, {
@@ -88,6 +89,8 @@ export function LogServiceClient({
       showToast(t.savedTitle, t.savedBody);
       router.push(`/app/register/${machine.asset_tag}`);
       router.refresh();
+    } catch (e) {
+      showToast(t.saveFailed, e instanceof Error ? e.message : undefined);
     } finally {
       setBusy(false);
     }
@@ -162,7 +165,7 @@ export function LogServiceClient({
             }}
           >
             {invoiceFile ? invoiceFile.name : t.invoiceHint}
-            <input type="file" accept="image/*" hidden onChange={(e) => setInvoiceFile(e.target.files?.[0] ?? null)} />
+            <input type="file" accept={ATTACHMENT_ACCEPT} hidden onChange={(e) => setInvoiceFile(e.target.files?.[0] ?? null)} />
           </label>
           <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1.2fr) minmax(0,1fr)", gap: 9 }}>
             <label style={{ display: "flex", flexDirection: "column", gap: 5, minWidth: 0 }}>

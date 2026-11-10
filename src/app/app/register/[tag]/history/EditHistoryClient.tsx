@@ -7,6 +7,8 @@ import { useLang } from "@/lib/i18n/LangProvider";
 import { useToast } from "@/lib/toast";
 import { createClient } from "@/lib/supabase/client";
 import { updateService } from "@/lib/data/services";
+import { ATTACHMENT_ACCEPT, uploadServiceAttachment } from "@/lib/data/attachments";
+import { InvoiceAttachment } from "@/components/InvoiceAttachment";
 import { formatDate, parseDisplayDate, toISODate } from "@/lib/status";
 import { WORK_TYPES, workTypeLabel } from "@/lib/labels";
 import type { MachineSummary, Service } from "@/lib/data/types";
@@ -17,6 +19,7 @@ type Draft = {
   date: string;
   notes: string;
   invoice_number: string;
+  file: File | null;
 };
 
 export function EditHistoryClient({
@@ -40,6 +43,7 @@ export function EditHistoryClient({
           date: formatDate(new Date(s.date)),
           notes: s.notes ?? "",
           invoice_number: s.invoice_number ?? "",
+          file: null,
         },
       ])
     )
@@ -54,20 +58,26 @@ export function EditHistoryClient({
     setBusy(true);
     try {
       await Promise.all(
-        initialServices.map((s) => {
+        initialServices.map(async (s) => {
           const d = drafts[s.id];
           const date = parseDisplayDate(d.date);
+          const attachment_path = d.file
+            ? await uploadServiceAttachment(supabase, machine.id, d.file)
+            : s.attachment_path;
           return updateService(supabase, s.id, {
             work_type: d.work_type,
             date: date ? toISODate(date) : s.date,
             notes: d.notes || null,
             invoice_number: d.invoice_number || null,
+            attachment_path,
           });
         })
       );
       showToast(t.histSaved);
       router.push(`/app/register/${machine.asset_tag}`);
       router.refresh();
+    } catch (e) {
+      showToast(t.saveFailed, e instanceof Error ? e.message : undefined);
     } finally {
       setBusy(false);
     }
@@ -117,6 +127,29 @@ export function EditHistoryClient({
                     onChange={(e) => patch(s.id, { invoice_number: e.target.value })}
                     placeholder={t.invoiceNoHint}
                     style={smallField}
+                  />
+                </label>
+                {s.attachment_path && !d.file && (
+                  <InvoiceAttachment path={s.attachment_path} fileBase={`${machine.asset_tag}_${s.date}_invoice`} />
+                )}
+                <label
+                  style={{
+                    padding: "10px 12px",
+                    borderRadius: 9,
+                    border: "1px dashed rgba(0,0,0,.2)",
+                    background: "var(--sheet)",
+                    font: "400 12px/1.3 var(--font-display)",
+                    color: "var(--grey-label)",
+                    cursor: "pointer",
+                    textAlign: "center",
+                  }}
+                >
+                  {d.file ? d.file.name : s.attachment_path ? t.replaceInvoice : t.attachInvoice}
+                  <input
+                    type="file"
+                    accept={ATTACHMENT_ACCEPT}
+                    hidden
+                    onChange={(e) => patch(s.id, { file: e.target.files?.[0] ?? null })}
                   />
                 </label>
               </div>
